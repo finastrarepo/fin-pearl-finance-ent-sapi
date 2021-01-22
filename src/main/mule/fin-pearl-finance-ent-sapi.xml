@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:anypoint-mq="http://www.mulesoft.org/schema/mule/anypoint-mq" xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/anypoint-mq http://www.mulesoft.org/schema/mule/anypoint-mq/current/mule-anypoint-mq.xsd">
+
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="39c8c372-84e4-429a-adf8-9e39704ccefe" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="fin-pearl-finance-ent-sapiFlow" doc:id="6957211e-1a4b-422c-a8c2-346c18386254" >
+		<scheduler doc:name="Scheduler" doc:id="578801b8-69c0-4b6c-ac85-c1ea02838c24" >
+			<scheduling-strategy >
+				<cron expression="${cronExpressionPearlInsert}"/>
+			</scheduling-strategy>
+		</scheduler>
+		<set-variable value="#[uuid()]" doc:name="CorelationID" doc:id="79326cc1-61ca-4b66-8030-793c10e77440" variableName="copyCustom_corrId"/>
+		<db:select doc:name="Select" doc:id="66754074-a6d7-4a81-a4c8-fbc6cbe8ae11" config-ref="Database_Config_Pearl">
+			<db:sql >SELECT TOP 10* FROM VW_SFDCInterchange_PPOPPLINE</db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="fa32eab6-d40d-4a4f-9935-9815383e1d73" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="2981c4c3-04c8-4381-b7ff-36c6eb1cf9a6" message="#[payload]" category="@@@@@ Response@@@@@"/>
+		<ee:transform doc:name="Transform Message" doc:id="77d83a38-a072-472c-8fd2-61dbde5fbf38" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map (item, index) -> 
+{
+	dataField1: item.DateField1,
+	dataField2: item.DateField2,
+	dataField3: item.DateField3,
+	externalID: item.RecID,
+	genString1: item.GenString1,
+	genString10: item.GenString10,
+	genString11: item.GenString11,
+	genString12: item.GenString12,
+	genString13: item.GenString13,
+	genString14: item.GenString14,
+	genString15: item.GenString15,
+	genString16: item.GenString16,
+	genString17: item.GenString17,
+	genString18: item.GenString18,
+	genString19: item.GenString19,
+	genString2: item.GenString2,
+	genString20: item.GenString20,
+	genString21: item.GenString21,
+	genString22: item.GenString22,
+	genString23: item.GenString23,
+	genString24: item.GenString24,
+	genString25: item.GenString25,
+	genString26: item.GenString26,
+	genString27: item.GenString27,
+	genString28: item.GenString28,
+	genString29: item.GenString29,
+	genString3: item.GenString3,
+	genString30: item.GenString30,
+	genString31: item.GenString31,
+	genString32: item.GenString32,
+	genString33: item.GenString33,
+	genString34: item.GenString34,
+	genString35: item.GenString35,
+	genString4: item.GenString4,
+	genString5: item.GenString5,
+	genString6: item.GenString6,
+	genString7: item.GenString7,
+	genString8: item.GenString8,
+	genString9: item.GenString9,
+	longString1: item.LongString1,
+	longString10: item.LongString10,
+	longString11: item.LongString11,
+	longString12: item.LongString12,
+	longString13: item.LongString13,
+	longString14: item.LongString14,
+	longString15: item.LongString15,
+	longString16: item.LongString16,
+	longString17: item.LongString17,
+	longString18: item.LongString18,
+	longString19: item.LongString19,
+	longString2: item.LongString2,
+	longString20: item.LongString20,
+	longString22: item.LongString21,
+	longString3: item.LongString3,
+	longString4: item.LongString4,
+	longString5: item.LongString5,
+	longString6: item.LongString6,
+	longString7: item.LongString7,
+	longString8: item.LongString8,
+	longString9: item.LongString9,
+	numField1: if(item.NumField1 == null) 0 else item.NumField1,
+	numField10: if(item.NumField10 == null) 0 else item.NumField10,
+	numField11: if(item.NumField11 == null) 0 else item.NumField11,
+	numField12: if(item.NumField12 == null) 0 else item.NumField12,
+	numField13: if(item.NumField13 == null) 0 else item.NumField13,
+	numField14: if(item.NumField14 == null) 0 else item.NumField14,
+	numField15: if(item.NumField15 == null) 0 else item.NumField15,
+	numField16: if(item.NumField16 == null) 0 else item.NumField16,
+	numField17: if(item.NumField17 == null) 0 else item.NumField17,
+	numField18: if(item.NumField18 == null) 0 else item.NumField18,
+	numField19: if(item.NumField19 == null) 0 else item.NumField19,
+	numField2: if(item.NumField2 == null) 0 else item.NumField2,
+	numField20: if(item.NumField20 == null) 0 else item.NumField20,
+	numField21: if(item.NumField21 == null) 0 else item.NumField21,
+	numField22: if(item.NumField22 == null) 0 else item.NumField22,
+	numField23: if(item.NumField23 == null) 0 else item.NumField23,
+	numField24: if(item.NumField24 == null) 0 else item.NumField24,
+	numField25: if(item.NumField25 == null) 0 else item.NumField25,
+	numField26: if(item.NumField26 == null) 0 else item.NumField26,
+	numField27: if(item.NumField27 == null) 0 else item.NumField27,
+	numField28: if(item.NumField28 == null) 0 else item.NumField28,
+	numField29: if(item.NumField29 == null) 0 else item.NumField29,
+	numField3: if(item.NumField3 == null) 0 else item.numField3,
+	numField30: if(item.NumField30 == null) 0 else item.NumField30,
+	numField31: if(item.NumField31 == null) 0 else item.NumField31,
+	numField32: if(item.NumField32 == null) 0 else item.NumField32,
+	numField33: if(item.NumField33 == null) 0 else item.NumField33,
+	numField34: if(item.NumField34 == null) 0 else item.NumField34,
+	numField35: if(item.NumField35 == null) 0 else item.NumField35,
+	numField36: if(item.NumField36 == null) 0 else item.NumField37,
+	numField37: if(item.NumField37 == null) 0 else item.numField37,
+	numField38: if(item.NumField38 == null) 0 else item.NumField38,
+	numField4: if(item.NumField4 == null) 0 else item.NumField4,
+	numField5: if(item.NumField5 == null) 0 else item.NumField5,
+	numField6: if(item.NumField6 == null) 0 else item.NumField6,
+	numField7: if(item.NumField7 == null) 0 else item.NumField7,
+	numField8: if(item.NumField8 == null) 0 else item.NumField8,
+	numField9: if(item.NumField9 == null) 0 else item.NumField9,
+	recordID: if(item.TaskType=="PPOPPLINE") "01220000000UYT3"
+			else if(item.TaskType=="PPOPPLINEH") "01220000000V4eh" else "01220000000Uw1s",
+	sfdcID: item.SFDCId,
+	sfdcObject: item.Opportunity
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<anypoint-mq:publish doc:name="PublishToRespQueue" doc:id="238b1afa-9513-4c1a-9d6f-0e3fe83b14dd" destination="${pearl-Resp-Queue}" config-ref="Anypoint_MQ_Config">
+			<anypoint-mq:properties ><![CDATA[#[output application/java
+---
+{
+	"correlationId" : vars.copyCustom_corrId,
+	"actionID" : "1",
+	"operationType": "Insert"
+}]]]></anypoint-mq:properties>
+		</anypoint-mq:publish>
+	</flow>
+	
+		
+	
+	<!-- 
+	
+	<sub-flow name="fin-holidayReduction-interfaceSub_Flow" doc:id="5c5719bc-a18f-4e87-9e83-123238bb0259" >
+		<db:select doc:name="Select" doc:id="41adf616-3f1a-43a7-b79e-379b8b78084a" config-ref="Database_Config_Pearl">
+			<db:sql ><![CDATA[SELECT TOP 10* FROM VW_SFDCInterchange]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="a8a1883c-eeee-4758-942f-a065a77663cf" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+-&#45;&#45;
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="d62692c9-1b7a-4753-b011-f349b6c7ffac" message="#[payload]" category="Response received from Pearl"/>
+		<ee:transform doc:name="Transform Message" doc:id="f10c6b63-6540-433b-b939-f4c8accc22e4" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+-&#45;&#45;
+payload map (item, index) -> {
+    EDD_Exempt_Flag__c: item.GenString1,
+	EDD_FLAG__c: item.NumField4,
+    External_Id__c: item.RecID,
+    External_System__c: "NA",
+    Fields_Updated__c: "NA",
+    NumField1__c: item.NumField1,
+    NumField2__c: item.NumField2,
+    Operation__c: "NA",
+    RPA_Rate__c: item.NumField3,
+    RecordTypeId: "NA",
+    SFDC_Id__c: item.SFDCId,
+    SFDC_Object__c: "NA"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="e0974128-0e95-498e-bf0e-6cc6207b47d7" message="#[payload]"/>
+	</sub-flow>
+	
+	-->
+	
+</mule>

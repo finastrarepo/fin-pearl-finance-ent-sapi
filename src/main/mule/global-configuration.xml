@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:anypoint-mq="http://www.mulesoft.org/schema/mule/anypoint-mq" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/anypoint-mq http://www.mulesoft.org/schema/mule/anypoint-mq/current/mule-anypoint-mq.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+	
+		<db:config name="Database_Config_Pearl" doc:name="Database Config" doc:id="76bf448f-0f08-461f-912c-bef43c1d72cc" >
+		<db:mssql-connection host="${pearldb.host}" user="${pearldb.user}" password="${secure::pearldb.password}" databaseName="${pearldb.name}" port="${pearldb.port}"/>
+	</db:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="31d693ae-58b5-4cb7-b435-11130922fa76" file="env/${anypoint_application_environment}_properties.yaml" />
+		<anypoint-mq:config name="Anypoint_MQ_Config" doc:name="Anypoint MQ Config" doc:id="524e70f4-2b87-4d06-944b-7cb7f1692aaf" >
+		<anypoint-mq:connection url="${secure::mq.url}" clientId="${secure::mq.client-id}" clientSecret="${secure::mq.client-secret}" />
+	</anypoint-mq:config>
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="3c5b5ab4-4e98-4e9d-a9a4-f65e7dbb5cb0" file="env\${anypoint_application_environment}_properties.yaml" key="${anypoint_application_encryption_key}" />
+	
+	
+</mule>

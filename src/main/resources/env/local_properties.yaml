@@ -1,0 +1,51 @@
+# Every 1 Sec# cronExpressionSubscriptions: "0 * * ? * *" 
+cronExpressionPearlInsert: "0 */3 * ? * *" 
+
+
+########Queue names#########
+pearl-Resp-Queue: "pearl-resp-queue"
+
+##Http Configuration
+http:
+  host: "0.0.0.0"
+  port: "8081"
+  
+##Https Configuration
+https:
+  host: "0.0.0.0"
+  port: "8092"
+
+#method for generating token
+  methodPost: "POST"
+  methodGet: "GET"
+  methodPut: "PUT"
+  methodDelete: "DELETE"
+  methodPatch: "PATCH"
+
+## http request configuration
+httpRequest:
+  responseTimeout: "30000"
+  
+ 
+##Pearl Database Configuration
+pearldb.host: "UK1VSWDBCORM00"
+pearldb.port: "1433"
+pearldb.user: "mulesoftintegration"
+pearldb.name: "CommonRef_SBOX"
+pearldb.password: "![ZGkF3HODzj5lDAmMrB3D/w==]"
+  
+##MQ Configuration
+mq:
+  url: "https://mq-eu-west-2.anypoint.mulesoft.com/api/v1"
+  client-id: "![f261NaxkDJmbUrs4i2kFHfLxjuoJOtmD7Hm9Xz91LWZautU9+KPqc86TrANJ6StS]"
+  client-secret: "![DVhYbOweoLRbfDpddbujWcLH2t4+5YfyTSPDGkGuWVh09TTKhHftN5iX0uRGB9dL]"
+
+#log category
+log:
+  payload: "com.finastra.log"
+  logEntry: "com.finastra.logEntry"
+  logError: "com.finastra.logError"
+
+##masking 
+mask_keys: "firstName|2|5,phone|2|5,email|2|5"
+mask.keys.time.to.live: "-1" 
